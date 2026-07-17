@@ -8,7 +8,7 @@
 
 ------
 
-[Replicate](https://replicate.com/) provider for the PHP AI SDK — image and video generation via the `/v1/predictions` API (`prefer: wait` + polling), consistent with `@ai-sdk/replicate`.
+The Replicate provider package for the PHP AI SDK supports image and video generation via the `/v1/predictions` API (`prefer: wait` + polling), consistent with `@ai-sdk/replicate`.
 
 ## Installation
 
@@ -40,6 +40,17 @@ $result = Generate::image()
 ```
 
 Video jobs resolve to a `VideoJob` with a result URL in `VideoData`. Provider options under `replicate` support `maxWaitTimeInSeconds`, `pollIntervalMs`, and `pollTimeoutMs`, plus model-specific input fields.
+
+## Documentation
+
+- [PHP AI SDK documentation](https://phpaisdk.com/docs)
+- [Replicate documentation](https://phpaisdk.com/docs/replicate)
+
+## Community
+
+- [Contributing](https://github.com/phpaisdk/.github/blob/main/CONTRIBUTING.md)
+- [Support](https://github.com/phpaisdk/.github/blob/main/SUPPORT.md)
+- For private security reports, email [security@phpaisdk.com](mailto:security@phpaisdk.com).
 
 ## License
 
