@@ -2,6 +2,10 @@
 
 Notable changes to `aisdk/replicate`. Release notes are also published at https://github.com/phpaisdk/replicate/releases.
 
+## Unreleased (v0.11.0)
+
+- Requires `aisdk/core ^0.11.0` for shared follow-up URL origin validation.
+
 ## v0.10.2 — 2026-10-29
 
 - Reject untrusted prediction polling origins before sending API credentials.

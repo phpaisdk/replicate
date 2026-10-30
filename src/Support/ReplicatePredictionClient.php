@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace AiSdk\Replicate\Support;
 
-use AiSdk\Exceptions\InvalidResponseException;
 use AiSdk\Generate;
 use AiSdk\Exceptions\AiSdkException;
 use AiSdk\Utils\Http\HttpRunner;
+use AiSdk\Utils\Http\OriginGuard;
 use AiSdk\Replicate\ReplicateOptions;
 
 /**
@@ -99,7 +99,7 @@ final class ReplicatePredictionClient
                 throw new AiSdkException('Replicate prediction missing poll URL.', ['provider' => ReplicateOptions::PROVIDER_NAME]);
             }
 
-            self::assertFollowUpOrigin($getUrl, $options->baseUrl);
+            OriginGuard::assertSameOrigin($getUrl, $options->baseUrl);
             $prediction = $runner->getJson($getUrl, $options->authHeaders(), ReplicateOptions::PROVIDER_NAME);
             $status = (string) ($prediction['status'] ?? '');
         }
@@ -115,32 +115,5 @@ final class ReplicatePredictionClient
         }
 
         return $prediction;
-    }
-
-    private static function assertFollowUpOrigin(string $url, string $baseUrl): void
-    {
-        $origin = static function (string $value): ?string {
-            if (preg_match('/[\x00-\x20\x7f\\\\]/', $value) === 1) {
-                return null;
-            }
-            $parts = parse_url($value);
-            if ($parts === false || ! isset($parts['scheme'], $parts['host'])
-                || isset($parts['user']) || isset($parts['pass'])) {
-                return null;
-            }
-            $scheme = strtolower($parts['scheme']);
-            if (! in_array($scheme, ['http', 'https'], true) || ($parts['port'] ?? 1) < 1) {
-                return null;
-            }
-
-            return $scheme . '://' . strtolower($parts['host']) . ':' . ($parts['port'] ?? ($scheme === 'https' ? 443 : 80));
-        };
-        $actual = $origin($url);
-        $expected = $origin($baseUrl);
-        if ($actual !== null && $expected !== null && $actual === $expected) {
-            return;
-        }
-
-        throw new InvalidResponseException('Provider follow-up URL has an untrusted origin.');
     }
 }
